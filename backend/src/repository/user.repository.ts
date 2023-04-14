@@ -1,13 +1,14 @@
-import { InternalServerError, logger } from "../utils"
+/* eslint-disable no-unreachable */
+import { InternalServerError, logger } from '../utils'
 
 class UserRepository {
   getUsers = async () => {
-   try {
-     return true
-   } catch (err: any) {
-    logger.error("Error - get users ", err)
-    throw new InternalServerError(err)
-   }
+    try {
+      return true
+    } catch (err: any) {
+      logger.error('Error - get users ', err)
+      throw new InternalServerError(err)
+    }
   }
 }
 

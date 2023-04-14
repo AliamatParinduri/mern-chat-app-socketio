@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express'
 
 import { userService } from '../services'
-import { UnprocessableEntityError, logger } from '../utils'
+import { logger } from '../utils'
 
 class UserController {
   getUsers = async (req: Request, res: Response, next: NextFunction) => {
