@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose'
+import { Document, Schema, model } from 'mongoose'
 
 import { ChatDoc, UserDoc } from '.'
 
