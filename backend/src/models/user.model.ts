@@ -1,22 +1,28 @@
-import { Document, Schema, model } from 'mongoose'
+import { Schema, model } from 'mongoose'
+import bcrypt from 'bcrypt'
 
 import { DefaultPicture } from '../../config'
-
-export interface UserDoc extends Document {
-  name: string
-  email: string
-  password: string
-  pic: string
-}
+import { UserDTO } from '../dto'
 
 const UserSchema = new Schema(
   {
     name: { type: String, required: true },
-    email: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     pic: { type: String, default: DefaultPicture, required: true }
   },
   { timestamps: true }
 )
 
-export const User = model<UserDoc>('User', UserSchema)
+UserSchema.pre('save', async function (next) {
+  console.log(!this.isModified)
+
+  if (!this.isModified) {
+    next()
+  }
+
+  const salt = await bcrypt.genSalt(12)
+  this.password = await bcrypt.hash(this.password, salt)
+})
+
+export const User = model<UserDTO>('User', UserSchema)

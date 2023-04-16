@@ -1,12 +1,6 @@
-import { Document, Schema, model } from 'mongoose'
+import { Schema, model } from 'mongoose'
 
-import { ChatDoc, UserDoc } from '.'
-
-export interface MessageDoc extends Document {
-  sender: UserDoc
-  content: string
-  chat: ChatDoc
-}
+import { MessageDTO } from '../dto'
 
 const MessageSchema = new Schema(
   {
@@ -23,4 +17,4 @@ const MessageSchema = new Schema(
   { timestamps: true }
 )
 
-export const Message = model<MessageDoc>('Message', MessageSchema)
+export const Message = model<MessageDTO>('Message', MessageSchema)
