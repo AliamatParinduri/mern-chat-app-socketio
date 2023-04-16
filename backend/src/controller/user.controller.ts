@@ -6,7 +6,8 @@ import { logger } from '../utils'
 class UserController {
   getUsers = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await userService.getUsers()
+      const user = res.locals.user
+      const result = await userService.getUsers(req, user)
 
       logger.info('Success get user data')
       return res.status(200).json({ data: result })

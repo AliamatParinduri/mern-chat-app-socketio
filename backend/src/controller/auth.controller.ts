@@ -29,7 +29,7 @@ class AuthController {
 
       const result = await authService.login(body as LoginDTO)
 
-      const token = generateToken({ id: result._id, ...body }, { expiresIn: '1d' })
+      const token = generateToken({ _id: result._id, ...body }, { expiresIn: '1d' })
       if (!token) {
         throw new UnprocessableEntityError('failed to generate token')
       }

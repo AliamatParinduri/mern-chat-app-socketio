@@ -1,12 +1,12 @@
 /* eslint-disable no-unreachable */
-import { RegisterDTO } from '../dto'
+import { RegisterDTO, UserDTO } from '../dto'
 import { User } from '../models'
 import { InternalServerError, logger } from '../utils'
 
 class UserRepository {
-  getUsers = async () => {
+  getUsers = async (keyword: any, user: UserDTO) => {
     try {
-      return true
+      return await User.find(keyword).find({ _id: { $ne: user._id } })
     } catch (err: any) {
       logger.error('Error - get users ', err)
       throw new InternalServerError(err)

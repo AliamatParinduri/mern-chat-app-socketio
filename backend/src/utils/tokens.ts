@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 
-import { privateKey } from '../../config'
+import { privateKey, publicKey } from '../../config'
 import { UserDTO } from '../dto'
 
 export const generateToken = (user: UserDTO, options?: jwt.SignOptions | undefined) => {
@@ -8,4 +8,8 @@ export const generateToken = (user: UserDTO, options?: jwt.SignOptions | undefin
     ...(options && options),
     algorithm: 'RS256'
   })
+}
+
+export const verifyToken = (token: string) => {
+  return jwt.verify(token, publicKey)
 }

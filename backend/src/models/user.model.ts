@@ -15,8 +15,6 @@ const UserSchema = new Schema(
 )
 
 UserSchema.pre('save', async function (next) {
-  console.log(!this.isModified)
-
   if (!this.isModified) {
     next()
   }

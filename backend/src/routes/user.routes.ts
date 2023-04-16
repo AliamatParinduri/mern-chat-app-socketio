@@ -1,5 +1,6 @@
 import { Router } from 'express'
 import { getUsers } from '../controller'
+import { requireLogin } from '../middlewares/authorization'
 
 class UserRoutes {
   router: Router
@@ -9,7 +10,7 @@ class UserRoutes {
   }
 
   routes() {
-    this.router.get('/', getUsers)
+    this.router.get('/', requireLogin, getUsers)
   }
 }
 
