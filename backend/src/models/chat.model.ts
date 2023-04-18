@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose'
+
 import { ChatDTO } from '../dto'
 
 const ChatSchema = new Schema(

@@ -1,4 +1,4 @@
-import { payloadMustInJSON } from '../middleware'
+import { payloadMustInJSON } from '../middlewares'
 import { login, register } from '../controller'
 import { BaseRoutes } from './base.route'
 

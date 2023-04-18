@@ -1,4 +1,5 @@
 import { Document } from 'mongoose'
+
 import { ChatDTO, UserDTO } from '.'
 
 export interface MessageDTO extends Document {

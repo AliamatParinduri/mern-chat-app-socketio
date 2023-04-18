@@ -1,4 +1,5 @@
 import { NextFunction, Request, Response } from 'express'
+
 import { UnauthorizedError, logger, verifyToken } from '../utils'
 
 export const requireLogin = async (req: Request, res: Response, next: NextFunction) => {
