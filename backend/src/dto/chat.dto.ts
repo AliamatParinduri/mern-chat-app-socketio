@@ -33,7 +33,7 @@ export const CreateGroupChatSchema = Joi.object({
 
 export const RenameGroupChatSchema = Joi.object({
   chatId: Joi.string().alphanum().required(),
-  chatname: Joi.string().pattern(new RegExp('^[a-zA-Z0-9 ]{3,75}$')).required()
+  chatName: Joi.string().pattern(new RegExp('^[a-zA-Z0-9 ]{3,75}$')).required()
 })
 
 export const AddOrRemoveGroupChatSchema = Joi.object({
