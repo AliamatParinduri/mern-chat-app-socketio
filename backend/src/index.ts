@@ -1,5 +1,11 @@
 import app from './app'
 import { PORT as port } from '../config'
-import { logger } from './utils'
+import { connectDB, logger } from './utils'
 
-app.listen(port, () => logger.info(`server running on http:localhost:${port}`))
+const setupServer = async () => {
+  await connectDB()
+
+  app.listen(port, () => logger.info(`server running on http://localhost:${port}`))
+}
+
+setupServer()

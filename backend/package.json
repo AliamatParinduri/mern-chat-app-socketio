@@ -8,21 +8,13 @@
     "test": "jest --detectOpenHandles",
     "start": "npx ts-node src/index.ts",
     "dev": "nodemon --exec ts-node src/index.ts",
-    "precheck-prettier": "prettier --write .",
-    "check-prettier": "tsc --pretty --noEmit",
-    "postcheck-prettier": "npm run check-eslint",
-    "precheck-eslint": "prettier --check .",
-    "check-eslint": "eslint . --ext ts --ext tsx --ext js --fix",
-    "build": "tsc",
-    "precommit-msg": "echo 'Pre-commit checks...' && exit 0"
+    "preprettier-check": "prettier --write .",
+    "prettier-check": "tsc --pretty --noEmit",
+    "postprettier-check": "npm run eslint-check",
+    "preeslint-check": "prettier --check .",
+    "eslint-check": "eslint . --ext ts --ext tsx --ext js --fix",
+    "build": "tsc"
   },
-  "pre-commit": [
-    "precommit-msg",
-    "precheck-prettier",
-    "check-prettier",
-    "precheck-eslint",
-    "check-eslint"
-  ],
   "keywords": [],
   "license": "ISC",
   "dependencies": {
@@ -30,7 +22,9 @@
     "cors": "^2.8.5",
     "dayjs": "^1.11.7",
     "express": "^4.18.2",
+    "joi": "^17.9.1",
     "jsonwebtoken": "^9.0.0",
+    "mongoose": "^7.0.3",
     "pino": "^8.11.0",
     "pino-pretty": "^10.0.0",
     "ts-node": "^10.9.1"
@@ -52,7 +46,6 @@
     "eslint-plugin-promise": "^6.1.1",
     "jest": "^29.5.0",
     "nodemon": "^2.0.22",
-    "pre-commit": "^1.2.2",
     "prettier": "^2.8.7",
     "supertest": "^6.3.3",
     "ts-jest": "^29.0.5",
