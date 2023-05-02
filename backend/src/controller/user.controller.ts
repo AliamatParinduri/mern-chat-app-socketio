@@ -1,15 +1,17 @@
 import { NextFunction, Request, Response } from 'express'
 
 import { userService } from '../services'
-import { UnprocessableEntityError, logger } from '../utils'
+import { logger } from '../utils'
 
 class UserController {
   getUsers = async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const result = await userService.getUsers()
+      const user = res.locals.user
+      const result = await userService.getUsers(req, user)
 
-      logger.info('Success get user data')
-      return res.status(200).json({ data: result })
+      const message = 'Success get user data'
+      logger.info(message)
+      return res.status(200).json({ message, data: result })
     } catch (err: any) {
       next(err)
     }
