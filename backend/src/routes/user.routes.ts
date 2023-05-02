@@ -1,15 +1,10 @@
-import { Router } from 'express'
 import { getUsers } from '../controller'
+import { requireLogin } from '../middlewares'
+import { BaseRoutes } from './base.route'
 
-class UserRoutes {
-  router: Router
-  constructor() {
-    this.router = Router()
-    this.routes()
-  }
-
+class UserRoutes extends BaseRoutes {
   routes() {
-    this.router.get('/', getUsers)
+    this.router.get('/', requireLogin, getUsers)
   }
 }
 
