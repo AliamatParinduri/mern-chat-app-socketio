@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import { BaseURL } from '../../config'
 
 const Login = () => {
   const [email, setEmail] = useState('')
@@ -29,7 +30,8 @@ const Login = () => {
         title: 'Please fill all the fields!',
         status: 'warning',
         duration: 5000,
-        isClosable: true
+        isClosable: true,
+        position: 'top-right'
       })
       setLoading(false)
       return false
@@ -42,24 +44,27 @@ const Login = () => {
         }
       }
 
-      const { data } = await axios.post('http://localhost:5000/api/v1/auth/login', { email, password }, config)
+      const { data } = await axios.post(`${BaseURL}/v1/auth/login`, { email, password }, config)
       toast({
-        title: 'Registration Successfull!',
+        title: 'Registration Successfully!',
         status: 'success',
         duration: 5000,
-        isClosable: true
+        isClosable: true,
+        position: 'top-right'
       })
 
       localStorage.setItem('userInfo', JSON.stringify(data))
       setLoading(false)
       navigate('/chats')
     } catch (err: any) {
+      setLoading(false)
       toast({
         title: 'Error Occured!',
-        description: err.response.data.message,
+        description: err.response.data.description,
         status: 'error',
         duration: 5000,
-        isClosable: true
+        isClosable: true,
+        position: 'top-right'
       })
     }
   }
@@ -68,7 +73,7 @@ const Login = () => {
     <VStack spacing="5px" color="black">
       <FormControl id="email" isRequired>
         <FormLabel>Email</FormLabel>
-        <Input type="text" placeholder="Enter Your Email" value={password} onChange={(e) => setEmail(e.target.value)} />
+        <Input type="text" placeholder="Enter Your Email" value={email} onChange={(e) => setEmail(e.target.value)} />
       </FormControl>
 
       <FormControl id="password" isRequired>

@@ -1,3 +1,4 @@
+/* eslint-disable n/handle-callback-err */
 import { useState } from 'react'
 
 import {
@@ -12,6 +13,7 @@ import {
 } from '@chakra-ui/react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
+import { BaseURL, Cloudinary } from '../../config'
 
 const SignUp = () => {
   const [name, setName] = useState('')
@@ -45,7 +47,7 @@ const SignUp = () => {
       data.append('upload_preset', 'chat-app')
       data.append('cloud_name', 'deomgdtou')
 
-      fetch('https://api.cloudinary.com/v1_1/deomgdtou/image/upload', {
+      fetch(Cloudinary, {
         method: 'post',
         body: data
       })
@@ -55,8 +57,14 @@ const SignUp = () => {
           setLoading(false)
         })
         .catch((err) => {
-          console.log(err)
-          setLoading(false)
+          toast({
+            title: 'Failed upload image!',
+            status: 'error',
+            duration: 5000,
+            isClosable: true,
+            position: 'top-right'
+          })
+          return setLoading(false)
         })
     } else {
       toast({
@@ -87,7 +95,8 @@ const SignUp = () => {
         title: 'Password do not match!',
         status: 'warning',
         duration: 5000,
-        isClosable: true
+        isClosable: true,
+        position: 'top-right'
       })
       setLoading(false)
       return false
@@ -100,16 +109,13 @@ const SignUp = () => {
         }
       }
 
-      const { data } = await axios.post(
-        'http://localhost:5000/api/v1/auth/register',
-        { name, email, password, pic },
-        config
-      )
+      const { data } = await axios.post(`${BaseURL}/v1/auth/register`, { name, email, password, pic }, config)
       toast({
-        title: 'Registration Successfull!',
+        title: 'Registration Successfully!',
         status: 'success',
         duration: 5000,
-        isClosable: true
+        isClosable: true,
+        position: 'top-right'
       })
 
       localStorage.setItem('userInfo', JSON.stringify(data))
@@ -118,10 +124,11 @@ const SignUp = () => {
     } catch (err: any) {
       toast({
         title: 'Error Occured!',
-        description: err.response.data.message,
+        description: err.response.data.description,
         status: 'error',
         duration: 5000,
-        isClosable: true
+        isClosable: true,
+        position: 'top-right'
       })
     }
   }
