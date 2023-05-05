@@ -11,6 +11,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Spinner,
   useDisclosure,
   useToast
 } from '@chakra-ui/react'
@@ -92,6 +93,9 @@ const GroupChatModal = ({ children }: any) => {
         config
       )
 
+      data.data.groupAdmin = [user]
+      data.data.users = [user, ...selectedUsers.map((user: { _id: string }) => user)]
+
       setChats([data.data, ...chats])
       onClose()
       toast({
@@ -128,6 +132,7 @@ const GroupChatModal = ({ children }: any) => {
     }
 
     const newSelectedUsers: any = [...selectedUsers, userToAdd]
+
     setSelectedUsers(newSelectedUsers)
   }
 
@@ -161,7 +166,7 @@ const GroupChatModal = ({ children }: any) => {
             </Box>
 
             {loading ? (
-              <div>loading</div>
+              <Spinner size="lg" marginTop="5px" />
             ) : (
               searchResult
                 .slice(0, 4)

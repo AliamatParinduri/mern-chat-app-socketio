@@ -78,30 +78,28 @@ const MyChats = ({ fetchAgain }: any) => {
       <Box display="flex" flexDir="column" p={3} bg="#F8F8F8" w="100%" h="100%" borderRadius="lg" overflowY="hidden">
         {chats ? (
           <Stack>
-            {chats.map((chat: any) => {
-              return (
-                <Box
-                  onClick={() => setSelectedChat(chat)}
-                  cursor="pointer"
-                  bg={selectedChat === chat ? '#38B2AC' : '#E8E8E8'}
-                  color={selectedChat === chat ? '#fff' : '#000'}
-                  px={3}
-                  py={2}
-                  borderRadius="lg"
-                  key={chat._id}
-                >
-                  <Text>{!chat.isGroupChat ? getSender(loggedUser!['data'], chat.users) : chat.chatName}</Text>
-                  {chat.latestMessage && (
-                    <Text fontSize="xs">
-                      <b>{chat.latestMessage.sender.name} : </b>
-                      {chat.latestMessage.content.length > 50
-                        ? chat.latestMessage.content.substring(0, 51) + '...'
-                        : chat.latestMessage.content}
-                    </Text>
-                  )}
-                </Box>
-              )
-            })}
+            {chats.map((chat: any) => (
+              <Box
+                onClick={() => setSelectedChat(chat)}
+                cursor="pointer"
+                bg={selectedChat === chat ? '#38B2AC' : '#E8E8E8'}
+                color={selectedChat === chat ? '#fff' : '#000'}
+                px={3}
+                py={2}
+                borderRadius="lg"
+                key={chat._id}
+              >
+                <Text>{!chat.isGroupChat ? getSender(loggedUser!['data'], chat.users) : chat.chatName}</Text>
+                {chat.latestMessage && (
+                  <Text fontSize="xs">
+                    <b>{chat.latestMessage.sender.name} : </b>
+                    {chat.latestMessage.content.length > 50
+                      ? chat.latestMessage.content.substring(0, 51) + '...'
+                      : chat.latestMessage.content}
+                  </Text>
+                )}
+              </Box>
+            ))}
           </Stack>
         ) : (
           <ChatLoading />
