@@ -1,4 +1,7 @@
 export { default as ChatLoading } from './ChatLoading'
 export { default as ProfileModal } from './ProfileModal'
-export { default as SideDrawer } from '../pages/SideDrawer'
+export { default as GroupChatModal } from './GroupChatModal'
+export { default as SingleChat } from './SingleChat'
+export { default as UpdateGroupChatModal } from './UpdateGroupChatModal'
+export { default as UserBadgeItem } from './UserBadgeItem'
 export { default as UserListItem } from './UserListItem'
