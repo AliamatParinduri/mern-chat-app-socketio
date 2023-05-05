@@ -9,11 +9,11 @@
     "build": "tsc && vite build",
     "test": "vitest",
     "preview": "vite preview",
-    "precheck-prettier": "prettier --write .",
-    "check-prettier": "tsc --pretty --noEmit",
-    "postcheck-prettier": "npm run check-eslint",
-    "precheck-eslint": "prettier --check .",
-    "check-eslint": "eslint . --ext ts --ext tsx --ext js --fix",
+    "preprettier-check": "prettier --write .",
+    "prettier-check": "tsc --pretty --noEmit",
+    "postprettier-check": "npm run eslint-check",
+    "preeslint-check": "prettier --check .",
+    "eslint-check": "eslint . --ext ts --ext tsx --ext js --fix",
     "precommit-msg": "echo 'Pre-commit checks...' && exit 0"
   },
   "dependencies": {

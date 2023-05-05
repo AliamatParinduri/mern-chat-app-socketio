@@ -1,17 +1,17 @@
 /* eslint-disable react/jsx-key */
 /* eslint-disable multiline-ternary */
 import { useEffect, useState } from 'react'
-import { ChatState } from '../../context/ChatProvider'
+import { ChatState, chatContextType } from '../../context/ChatProvider'
 import { Box, Button, Stack, Text, useToast } from '@chakra-ui/react'
 import axios from 'axios'
 import { FaPlus } from 'react-icons/fa'
 import { getSender } from '../../config/ChatLogics'
-import { ChatLoading } from '../../components'
+import { ChatLoading, GroupChatModal } from '../../components'
 import { BaseURL } from '../../config'
 
-const MyChats = () => {
+const MyChats = ({ fetchAgain }: any) => {
   const [loggedUser, setLoggedUser] = useState()
-  const { user, selectedChat, setSelectedChat, chats, setChats } = ChatState()
+  const { user, selectedChat, setSelectedChat, chats, setChats }: chatContextType = ChatState()
 
   const fetchChats = async () => {
     try {
@@ -23,7 +23,7 @@ const MyChats = () => {
 
       const { data } = await axios.get(`${BaseURL}/v1/chat`, config)
 
-      // if (!chats.find((c) => c._id === data.data._id)) setChats([data.data, ...chats])
+      // if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats])
 
       setChats(data.data)
     } catch (err: any) {
@@ -42,7 +42,7 @@ const MyChats = () => {
   useEffect(() => {
     setLoggedUser(JSON.parse(localStorage.getItem('userInfo')!))
     fetchChats()
-  }, [])
+  }, [fetchAgain])
 
   const toast = useToast()
 
@@ -68,17 +68,17 @@ const MyChats = () => {
         alignItems="center"
       >
         My Chats
-        <Button display="flex" fontSize={{ base: '17px', md: '10px', lg: '17px' }} rightIcon={<FaPlus />}>
-          New Group Chat
-        </Button>
+        <GroupChatModal>
+          <Button display="flex" fontSize={{ base: '17px', md: '10px', lg: '17px' }} rightIcon={<FaPlus />}>
+            New Group Chat
+          </Button>
+        </GroupChatModal>
       </Box>
 
       <Box display="flex" flexDir="column" p={3} bg="#F8F8F8" w="100%" h="100%" borderRadius="lg" overflowY="hidden">
         {chats ? (
           <Stack>
             {chats.map((chat: any) => {
-              console.log(chat)
-
               return (
                 <Box
                   onClick={() => setSelectedChat(chat)}
@@ -90,7 +90,15 @@ const MyChats = () => {
                   borderRadius="lg"
                   key={chat._id}
                 >
-                  <Text>{!chat.isGroupChat ? getSender(loggedUser.data, chat.users) : chat.chatName}</Text>
+                  <Text>{!chat.isGroupChat ? getSender(loggedUser!['data'], chat.users) : chat.chatName}</Text>
+                  {chat.latestMessage && (
+                    <Text fontSize="xs">
+                      <b>{chat.latestMessage.sender.name} : </b>
+                      {chat.latestMessage.content.length > 50
+                        ? chat.latestMessage.content.substring(0, 51) + '...'
+                        : chat.latestMessage.content}
+                    </Text>
+                  )}
                 </Box>
               )
             })}
