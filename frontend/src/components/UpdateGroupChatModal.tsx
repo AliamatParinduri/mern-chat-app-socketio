@@ -23,7 +23,7 @@ import { UserBadgeItem, UserListItem } from '.'
 import { BaseURL } from '../config'
 import { ChatState, chatContextType } from '../context/ChatProvider'
 
-const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }: any) => {
+const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain, fetchMessages }: any) => {
   const [search, setSearch] = useState()
   const [searchResult, setSearchResult] = useState([])
   const [groupChatName, setGroupChatName] = useState('')
@@ -36,63 +36,65 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }: any) => {
 
   const handleAddUser = async (user1: any) => {
     if (selectedChat.users.find((user: any) => user._id === user1._id)) {
-      toast({
+      return toast({
         title: 'User Already in group!',
         status: 'error',
         duration: 5000,
         isClosable: true,
         position: 'top-right'
       })
+    }
 
-      if (selectedChat.groupAdmin._id === user._id) {
-        toast({
-          title: 'Only admins can add someone!',
-          status: 'error',
-          duration: 5000,
-          isClosable: true,
-          position: 'top-right'
-        })
-      }
+    if (selectedChat.groupAdmin._id === user._id) {
+      return toast({
+        title: 'Only admins can add someone!',
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+        position: 'top-right'
+      })
+    }
 
-      try {
-        setLoading(true)
-        const config = {
-          headers: {
-            Authorization: `Bearer ${user.token}`
-          }
+    try {
+      setLoading(true)
+      const config = {
+        headers: {
+          Authorization: `Bearer ${user.token}`
         }
-
-        const { data } = await axios.put(
-          `${BaseURL}/v1/chat/add/group`,
-          {
-            chatId: selectedChat._id,
-            userId: user1._id
-          },
-          config
-        )
-
-        setSelectedChat(data.data)
-        setFetchAgain(!fetchAgain)
-        setLoading(false)
-      } catch (err: any) {
-        toast({
-          title: 'Only admins can add someone!',
-          description: err.response.data.message,
-          status: 'error',
-          duration: 5000,
-          isClosable: true,
-          position: 'top-right'
-        })
       }
+
+      const { data } = await axios.put(
+        `${BaseURL}/v1/chat/add/group`,
+        {
+          chatId: selectedChat._id,
+          userId: user1._id
+        },
+        config
+      )
+
+      setSelectedChat(data.data)
+      setFetchAgain(!fetchAgain)
+      setLoading(false)
+      toast({
+        title: 'Add User Successfully!',
+        status: 'success',
+        duration: 5000,
+        isClosable: true,
+        position: 'top-right'
+      })
+    } catch (err: any) {
+      toast({
+        title: 'Only admins can add someone!',
+        description: err.response.data.description,
+        status: 'error',
+        duration: 5000,
+        isClosable: true,
+        position: 'top-right'
+      })
     }
   }
 
   const handleRemove = async (user1: any) => {
-    console.log({
-      chatId: selectedChat._id,
-      userId: user1._id
-    })
-
     if (selectedChat.groupAdmin[0]._id !== user._id && user1._id !== user._id) {
       return toast({
         title: 'Only admins can add someone!',
@@ -122,11 +124,12 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }: any) => {
 
       user1._id === user._id ? setSelectedChat() : setSelectedChat(data.data)
       setFetchAgain(!fetchAgain)
+      fetchMessages()
       setLoading(false)
     } catch (err: any) {
       toast({
         title: 'Error Occured!',
-        description: err.response.data.message,
+        description: err.response.data.description,
         status: 'error',
         duration: 5000,
         isClosable: true,
@@ -159,7 +162,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }: any) => {
       setFetchAgain(!fetchAgain)
       setRenameLoading(false)
       toast({
-        title: 'Registration Successfully!',
+        title: 'Rename Group Successfully!',
         status: 'success',
         duration: 5000,
         isClosable: true,
@@ -168,7 +171,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }: any) => {
     } catch (err: any) {
       toast({
         title: 'Error Occured!',
-        description: err.response.data.message,
+        description: err.response.data.description,
         status: 'error',
         duration: 5000,
         isClosable: true,
@@ -183,7 +186,6 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain }: any) => {
   const handleSearch = async (query: any) => {
     setSearch(query)
     if (!query) {
-      // setSearchResult([])
       return false
     }
 

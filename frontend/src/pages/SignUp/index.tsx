@@ -85,7 +85,8 @@ const SignUp = () => {
         title: 'Please fill all the fields!',
         status: 'warning',
         duration: 5000,
-        isClosable: true
+        isClosable: true,
+        position: 'top-right'
       })
       setLoading(false)
       return false
@@ -118,10 +119,10 @@ const SignUp = () => {
         position: 'top-right'
       })
 
-      localStorage.setItem('userInfo', JSON.stringify(data))
       setLoading(false)
       navigate('/')
     } catch (err: any) {
+      setLoading(false)
       toast({
         title: 'Error Occured!',
         description: err.response.data.description,
