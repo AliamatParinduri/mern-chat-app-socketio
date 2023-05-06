@@ -4,13 +4,19 @@ import { Box, FormControl, IconButton, Input, Spinner, Text, useToast } from '@c
 import { FaArrowLeft } from 'react-icons/fa'
 import { ChatState, chatContextType } from '../context/ChatProvider'
 import { ProfileModal, ScrollableChat, UpdateGroupChatModal } from '.'
-import { BaseURL, getSender, getSenderFull } from '../config'
+import { BaseURL, ENDPOINT, getSender, getSenderFull } from '../config'
 import axios from 'axios'
+import io from 'socket.io-client'
+
+let socket: any, selectedChatCompare: any
 
 const SingleChat = ({ fetchAgain, setFetchAgain }: any) => {
   const [messages, setMessages] = useState([])
   const [newMessage, setNewMessage] = useState('')
   const [loading, setLoading] = useState(false)
+  const [socketConnected, setSocketConnected] = useState(false)
+  const [typing, setTyping] = useState(false)
+  const [isTyping, setIsTyping] = useState(false)
 
   const toast = useToast()
   const { user, selectedChat, setSelectedChat }: chatContextType = ChatState()
@@ -29,6 +35,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }: any) => {
 
       setMessages(data.data)
       setLoading(false)
+
+      socket.emit('join chat', selectedChat._id)
     } catch (err: any) {
       toast({
         title: 'Error Occured!',
@@ -44,9 +52,31 @@ const SingleChat = ({ fetchAgain, setFetchAgain }: any) => {
 
   useEffect(() => {
     fetchMessages()
+
+    selectedChatCompare = selectedChat
   }, [selectedChat])
 
+  useEffect(() => {
+    socket = io(ENDPOINT)
+    socket.emit('setup', user)
+    socket.on('connected', () => setSocketConnected(true))
+    socket.on('typing', () => setIsTyping(true))
+    socket.on('stop typing', () => setIsTyping(false))
+  }, [])
+
+  useEffect(() => {
+    socket.on('message received', (newMessageReceived: any) => {
+      if (!selectedChatCompare || selectedChatCompare._id !== newMessageReceived.chat._id) {
+        // disini kasih notifikasi
+      } else {
+        const newMesages: any = [...messages, newMessageReceived]
+        setMessages(newMesages)
+      }
+    })
+  })
+
   const sendMessage = async (e: any) => {
+    socket.emit('stop typing', selectedChat._id)
     if (e.key === 'Enter' && newMessage) {
       try {
         const config = {
@@ -67,6 +97,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }: any) => {
 
         const newMessages: any = [...messages, data.data]
 
+        socket.emit('new message', data.data)
         setNewMessage('')
         setMessages(newMessages)
       } catch (err: any) {
@@ -85,6 +116,25 @@ const SingleChat = ({ fetchAgain, setFetchAgain }: any) => {
 
   const typingHandler = (e: any) => {
     setNewMessage(e.target.value)
+
+    if (!socketConnected) return false
+
+    if (!typing) {
+      setTyping(true)
+      socket.emit('typing', selectedChat._id)
+    }
+
+    const lastTypingTime = new Date().getTime()
+    const timerLength = 3000
+    setTimeout(() => {
+      const currentTime = new Date().getTime()
+      const timeDiff = currentTime - lastTypingTime
+
+      if (timeDiff >= timerLength && typing) {
+        socket.emit('stop typing', selectedChat._id)
+        setTyping(false)
+      }
+    }, timerLength)
   }
 
   return (
@@ -142,6 +192,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }: any) => {
               </div>
             )}
             <FormControl onKeyDown={sendMessage} isRequired mt="3">
+              {isTyping ? <Spinner mt="3" /> : <> </>}
               <Input
                 variant="filled"
                 bg="#E0E0E0"

@@ -1,27 +1,33 @@
+import { useState } from 'react'
 import ScrollableFeed from 'react-scrollable-feed'
 import { isLastMessage, isSameSender, isSameSenderMargin, isSameUser } from '../config'
 import { ChatState, chatContextType } from '../context/ChatProvider'
 import { Avatar, Tooltip } from '@chakra-ui/react'
 
 const ScrollableChat = ({ messages }: any) => {
+  const [isGroupChat, setIsGroupChat] = useState(false)
   const { user }: chatContextType = ChatState()
+
+  console.log()
 
   return (
     <ScrollableFeed>
       {messages &&
         messages.map((message: any, i: number) => (
           <div style={{ display: 'flex', alignItems: 'center' }} key={message['_id']}>
-            {(isSameSender(messages, message, i, user._id) || isLastMessage(messages, i, user._id)) && (
-              <Tooltip label={message.sender.name} placement="bottom-start" hasArrow>
-                <Avatar
-                  mt="7px"
-                  mr="1"
-                  size="sm"
-                  cursor="pointer"
-                  name={message.sender.name}
-                  src={message.sender.pic}
-                ></Avatar>
-              </Tooltip>
+            {messages.length > 0 &&
+              messages[0].chat.isGroupChat &&
+              (isSameSender(messages, message, i, user._id) || isLastMessage(messages, i, user._id)) && (
+                <Tooltip label={message.sender.name} placement="bottom-start" hasArrow>
+                  <Avatar
+                    mt="7px"
+                    mr="1"
+                    size="sm"
+                    cursor="pointer"
+                    name={message.sender.name}
+                    src={message.sender.pic}
+                  ></Avatar>
+                </Tooltip>
             )}
             <span
               style={{

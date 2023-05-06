@@ -46,7 +46,7 @@ const Login = () => {
 
       const { data } = await axios.post(`${BaseURL}/v1/auth/login`, { email, password }, config)
       toast({
-        title: 'Registration Successfully!',
+        title: 'Login Successful!',
         status: 'success',
         duration: 5000,
         isClosable: true,
@@ -54,6 +54,7 @@ const Login = () => {
       })
 
       localStorage.setItem('userInfo', JSON.stringify(data))
+
       setLoading(false)
       navigate('/chats')
     } catch (err: any) {
@@ -97,7 +98,15 @@ const Login = () => {
         Login
       </Button>
 
-      <Button colorScheme="red" w="100%" style={{ marginTop: '1rem' }} onClick={submitHandler}>
+      <Button
+        colorScheme="red"
+        w="100%"
+        style={{ marginTop: '1rem' }}
+        onClick={() => {
+          setEmail('guest@example.com')
+          setPassword('12345678')
+        }}
+      >
         Get Guest User Creadentials
       </Button>
     </VStack>

@@ -35,7 +35,7 @@ const SideDrawer = () => {
   const [loading, setLoading] = useState(false)
   const [loadingChat, setLoadingChat] = useState(false)
 
-  const { user, selectedChat, setSelectedChat }: chatContextType = ChatState()
+  const { user, chats, setChats, setSelectedChat }: chatContextType = ChatState()
   const navigate = useNavigate()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
@@ -95,6 +95,7 @@ const SideDrawer = () => {
 
       const { data } = await axios.post(`${BaseURL}/v1/chat`, { userId }, config)
 
+      if (!chats.find((c: any) => c._id === data._id)) setChats([data.data, ...chats])
       setSelectedChat(data!.data)
       setLoadingChat(false)
       onClose()
