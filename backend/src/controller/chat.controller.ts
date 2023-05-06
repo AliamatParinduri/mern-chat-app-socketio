@@ -31,7 +31,7 @@ class ChatController {
 
       const result = await chatService.accessChat(user, body.userId)
 
-      const message = 'Success get access chat'
+      const message = 'Success create new chat'
       logger.info(message)
       return res.status(200).json({ message, data: result })
     } catch (err: any) {
