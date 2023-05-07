@@ -29,6 +29,7 @@
     "@typescript-eslint/explicit-function-return-type": "off",
     "@typescript-eslint/no-misused-promises": "off",
     "@typescript-eslint/no-unused-vars": "off",
+    "@typescript-eslint/indent": "off",
     "@typescript-eslint/ban-types": "off",
     "@typescript-eslint/dot-notation": "off",
     "@typescript-eslint/prefer-optional-chain": "off",

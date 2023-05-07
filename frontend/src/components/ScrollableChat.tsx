@@ -28,7 +28,7 @@ const ScrollableChat = ({ messages }: any) => {
                     src={message.sender.pic}
                   ></Avatar>
                 </Tooltip>
-            )}
+              )}
             <span
               style={{
                 background: `${message.sender._id === user._id ? '#BEE4F8' : '#B9F5D0'}`,

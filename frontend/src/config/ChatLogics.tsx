@@ -32,7 +32,7 @@ export const isSameSenderMargin = (messages: any, message: any, i: number, userI
     messages[i + 1].sender._id === message.sender._id &&
     messages[i].sender._id !== userId
   ) {
-    return 33
+    return messages[0].chat.isGroupChat ? 33 : 0
   } else if (
     (i < messages.length - 1 &&
       messages[i + 1].sender._id !== message.sender._id &&
