@@ -8,8 +8,6 @@ const ScrollableChat = ({ messages }: any) => {
   const [isGroupChat, setIsGroupChat] = useState(false)
   const { user }: chatContextType = ChatState()
 
-  console.log()
-
   return (
     <ScrollableFeed>
       {messages &&
