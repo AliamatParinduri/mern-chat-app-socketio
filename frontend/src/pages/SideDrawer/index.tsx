@@ -26,8 +26,8 @@ import axios from 'axios'
 import { FaBell, FaChevronDown } from 'react-icons/fa'
 
 import { ProfileModal, ChatLoading, UserListItem } from '../../components'
-import { BaseURL } from '../../config'
-import { ChatState } from '../../context/ChatProvider'
+import { BaseURL, getSender } from '../../config'
+import { ChatState, chatContextType } from '../../context/ChatProvider'
 
 const SideDrawer = () => {
   const [search, setSearch] = useState('')
@@ -35,7 +35,7 @@ const SideDrawer = () => {
   const [loading, setLoading] = useState(false)
   const [loadingChat, setLoadingChat] = useState(false)
 
-  const { user, setSelectedChat } = ChatState()
+  const { user, chats, setChats, setSelectedChat, notifications, setNotifications }: chatContextType = ChatState()
   const navigate = useNavigate()
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast = useToast()
@@ -95,7 +95,8 @@ const SideDrawer = () => {
 
       const { data } = await axios.post(`${BaseURL}/v1/chat`, { userId }, config)
 
-      setSelectedChat(data.data)
+      if (!chats.find((c: any) => c._id === data._id)) setChats([data.data, ...chats])
+      setSelectedChat(data!.data)
       setLoadingChat(false)
       onClose()
     } catch (err: any) {
@@ -136,9 +137,45 @@ const SideDrawer = () => {
         </Text>
         <div style={{ display: 'flex', alignItems: 'center' }}>
           <Menu>
-            <MenuButton p="1">
+            <MenuButton p="1" position="relative">
+              {notifications.length > 0 ? (
+                <Box
+                  w="20px"
+                  h="20px"
+                  background="#da3131"
+                  borderRadius="50%"
+                  position="absolute"
+                  display="flex"
+                  alignItems="center"
+                  justifyContent="center"
+                  right="1"
+                  fontSize="13"
+                  top="0"
+                  color="rgba(255,255,255,0.8)"
+                  padding="2"
+                >
+                  {notifications.length}
+                </Box>
+              ) : null}
+
               <FaBell fontSize="20px" style={{ margin: '7px' }} />
             </MenuButton>
+            <MenuList pl="2">
+              {!notifications.length && 'No New Messages'}
+              {notifications.map((notif: any) => (
+                <MenuItem
+                  key={notif._id}
+                  onClick={() => {
+                    setSelectedChat(notif.chat)
+                    setNotifications(notifications.filter((n: any) => n !== notif))
+                  }}
+                >
+                  {notif.chat.isGroupChat
+                    ? `New Message in ${notif.chat.chatName}`
+                    : `New Messsage from ${getSender(user, notif.chat.users)}`}
+                </MenuItem>
+              ))}
+            </MenuList>
           </Menu>
           <Menu>
             <MenuButton as={Button} rightIcon={<FaChevronDown />}>

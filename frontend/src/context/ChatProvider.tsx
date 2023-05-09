@@ -2,24 +2,44 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+export type chatContextType = {
+  user?: any
+  setUser?: any
+  selectedChat?: any
+  setSelectedChat?: any
+  chats?: any
+  setChats?: any
+  notifications?: any
+  setNotifications?: any
+}
+
 const ChatContext = createContext({})
 
 const ChatProvider = (props: any) => {
   const [user, setUser] = useState()
   const [selectedChat, setSelectedChat] = useState()
   const [chats, setChats] = useState()
+  const [notifications, setNotifications] = useState([])
 
   const navigate = useNavigate()
 
   useEffect(() => {
     const userInfo = JSON.parse(localStorage.getItem('userInfo')!)
-    setUser(userInfo)
 
-    if (!userInfo) navigate('/')
+    if (!userInfo) {
+      navigate('/')
+    } else {
+      setUser({
+        ...userInfo.data,
+        token: userInfo.token
+      })
+    }
   }, [navigate])
 
   return (
-    <ChatContext.Provider value={{ user, setUser, selectedChat, setSelectedChat, chats, setChats }}>
+    <ChatContext.Provider
+      value={{ user, setUser, selectedChat, setSelectedChat, chats, setChats, notifications, setNotifications }}
+    >
       {props.children}
     </ChatContext.Provider>
   )
